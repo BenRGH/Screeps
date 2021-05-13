@@ -1,5 +1,10 @@
 import { ErrorMapper } from 'utils/ErrorMapper';
+import { Traveler } from './Traveler';
+// ! it will save memory to use either travelTo() or moveTo() with a given creep, but not both.
+// creep.moveTo(myDestination);
+// creep.travelTo(myDestination);
 
+// #region declarations
 declare global {
 	/*
 		Example types, expand on these or remove them and add your own.
@@ -29,9 +34,8 @@ declare global {
 		}
 	}
 }
+// #endregion
 
-// When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
-// This utility uses source maps to get the line numbers and file names of the original, TS source code
 export const loop = ErrorMapper.wrapLoop(() => {
 	// ! Data logging
 	console.log(`Current game tick is ${Game.time}`);
