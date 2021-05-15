@@ -1,4 +1,4 @@
-import { IUnitCount } from 'Interfaces';
+import { ICreep, IUnitCount } from 'Interfaces';
 import { IStyle } from 'styles/PathStrokes';
 import RolesEnum from '../constants/RolesEnum';
 
@@ -70,12 +70,29 @@ export function randomNumber(min: number, max: number): number {
  */
 export function findGoDo(creep: Creep, findFn: ()=>Array<any>, goStyle: IStyle, doFn: (target: any)=> ScreepsReturnCode) {
     const targets = findFn();
+    if (targets.length === 0) {
+        console.log(`${creep} is stalled with no targets`);
+        return;
+    }
 
-    const target = targets[0]; // TODO optimise
+    // TODO optimise
+    // search through memory for each target and stop when one has below limit of
+    // workers going to it?
+
+    const target = getClosestTarget(creep, targets);
 
     const res = doFn(target);
 
     if(res === ERR_NOT_IN_RANGE) {
         creep.moveTo(target, goStyle);
     }
+}
+
+export function sortByClosest(creep: ICreep, targets: Array<any>): Array<any> {
+    return _.sortBy(targets, target => creep.pos.getRangeTo(target))
+}
+
+export function getClosestTarget(creep: ICreep, targets: Array<any>): any {
+    // TODO better types for targets
+    return sortByClosest(creep, targets)[0];
 }

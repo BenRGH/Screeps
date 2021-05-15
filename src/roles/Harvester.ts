@@ -1,10 +1,10 @@
 // import { Traveler } from '../Traveler';
 import { orangeStroke, whiteStroke } from 'styles/PathStrokes';
 import { findGoDo } from 'utils/Common';
-import { IStructure } from '../Interfaces';
+import { ICreep, IStructure } from '../Interfaces';
 
 export default {
-    run: (creep: Creep) => {
+    run: (creep: ICreep) => {
         if(creep.store.getFreeCapacity() > 0) {
             // has space
             findGoDo(
@@ -15,18 +15,18 @@ export default {
             );
 
         } else {
-            const targets = creep.room.find(FIND_STRUCTURES, {
-                filter: (structure: IStructure) => {
-                    return (structure.structureType === STRUCTURE_EXTENSION || structure.structureType === STRUCTURE_SPAWN)
-                        && structure.store.getFreeCapacity(RESOURCE_ENERGY);
-                }
-            });
-
-            if(targets.length > 0) {
-                if(creep.transfer(targets[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0], whiteStroke);
-                }
-            }
+            // creep is full
+            findGoDo(
+                creep,
+                () => creep.room.find(FIND_STRUCTURES, {
+                    filter: (structure: IStructure) => {
+                        return (structure.structureType === STRUCTURE_EXTENSION || structure.structureType === STRUCTURE_SPAWN)
+                            && structure.store.getFreeCapacity(RESOURCE_ENERGY);
+                    }
+                }), // TODO ruin
+                whiteStroke,
+                (target) => creep.transfer(target, RESOURCE_ENERGY)
+            );
         }
     }
 }

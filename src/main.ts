@@ -8,7 +8,7 @@ import Harvester from './roles/Harvester';
 import Upgrader from 'roles/Upgrader';
 import Builder from "roles/Builder";
 import { maintainUnitCount } from "utils/Common";
-import { IUnitCount } from "Interfaces";
+import { ICreep, IUnitCount } from "Interfaces";
 
 // #region declarations
 declare global {
@@ -51,9 +51,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
 	};
 
 	const desiredUnitCount: Readonly<IUnitCount> = {
-		[RolesEnum.Harvester]: 4,
-		[RolesEnum.Builder]: 4,
-		[RolesEnum.Upgrader]: 2,
+		[RolesEnum.Harvester]: 6,
+		[RolesEnum.Builder]: 3,
+		[RolesEnum.Upgrader]: 3,
 	}
 	// #endregion
 
@@ -69,7 +69,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
 	// #region Main
 
 	for(const name in Game.creeps) {
-		const creep = Game.creeps[name];
+		const creep: ICreep = Game.creeps[name];
 
 		switch (creep.memory.role) {
 			case RolesEnum.Harvester:
